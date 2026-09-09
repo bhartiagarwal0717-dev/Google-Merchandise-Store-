@@ -1,0 +1,6 @@
+{
+  "name": "Google Merchandise Store - Mobile UX Prototype",
+  "description": "A mobile-first, high-conversion conceptual redesign and interactive prototype of the Google Merchandise Store featuring guest checkout, fluid navigation, and real-time cart interactions.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
