@@ -120,6 +120,7 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
             <img
               src={product.images[selectedImageIndex] || product.images[0]}
               alt={product.name}
+              referrerPolicy="no-referrer"
               className="w-full h-full object-cover object-center transition-all duration-300"
             />
 
@@ -151,7 +152,7 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
                       : 'border-gray-200/80 hover:border-gray-300 opacity-80 hover:opacity-100'
                   }`}
                 >
-                  <img src={img} alt={`${product.name} view ${idx + 1}`} className="w-full h-full object-cover" />
+                  <img src={img} alt={`${product.name} view ${idx + 1}`} referrerPolicy="no-referrer" className="w-full h-full object-cover" />
                 </button>
               ))}
             </div>

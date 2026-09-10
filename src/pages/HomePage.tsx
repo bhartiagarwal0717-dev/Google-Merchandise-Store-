@@ -99,6 +99,7 @@ export const HomePage: React.FC<HomePageProps> = ({
                   <img
                     src={heroHoodie.images[0]}
                     alt={heroHoodie.name}
+                    referrerPolicy="no-referrer"
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                   />
                   <div className="absolute top-3 left-3 bg-white/90 backdrop-blur-xs text-xs font-bold text-gray-900 px-3 py-1 rounded-full shadow-xs">

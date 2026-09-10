@@ -31,6 +31,7 @@ export const StickyAddToCart: React.FC<StickyAddToCartProps> = ({
           <img
             src={product.images[0]}
             alt={product.name}
+            referrerPolicy="no-referrer"
             className="w-11 h-11 object-cover rounded-lg border border-gray-100 flex-shrink-0"
           />
           <div className="min-w-0">

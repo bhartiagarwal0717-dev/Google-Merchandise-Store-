@@ -182,6 +182,7 @@ export const SearchModal: React.FC<SearchModalProps> = ({
                       src={product.images[0]}
                       alt={product.name}
                       loading="lazy"
+                      referrerPolicy="no-referrer"
                       className="w-14 h-14 object-cover rounded-lg bg-gray-100 flex-shrink-0"
                     />
                     <div className="flex-1 min-w-0">

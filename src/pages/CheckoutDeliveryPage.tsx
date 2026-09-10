@@ -370,7 +370,7 @@ export const CheckoutDeliveryPage: React.FC<CheckoutDeliveryPageProps> = ({
             <div className="divide-y divide-gray-100 max-h-60 overflow-y-auto">
               {items.map((i) => (
                 <div key={i.id} className="py-2.5 flex items-center gap-2.5">
-                  <img src={i.product.images[0]} alt={i.product.name} className="w-10 h-10 object-cover rounded-lg" />
+                  <img src={i.product.images[0]} alt={i.product.name} referrerPolicy="no-referrer" className="w-10 h-10 object-cover rounded-lg" />
                   <div className="flex-1 min-w-0">
                     <p className="font-semibold text-gray-900 truncate">{i.product.name}</p>
                     <p className="text-[11px] text-gray-400">Qty: {i.quantity} • {i.selectedColor.name}</p>

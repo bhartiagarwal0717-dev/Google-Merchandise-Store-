@@ -138,6 +138,7 @@ export const OrderConfirmationPage: React.FC<OrderConfirmationPageProps> = ({
               <img
                 src={item.product.images[0]}
                 alt={item.product.name}
+                referrerPolicy="no-referrer"
                 className="w-14 h-14 object-cover rounded-xl border border-gray-100"
               />
               <div className="flex-1 min-w-0">

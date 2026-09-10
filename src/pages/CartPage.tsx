@@ -22,6 +22,7 @@ interface CartPageProps {
   onNavigate: (page: PageView) => void;
   onSelectProduct: (product: Product) => void;
   appliedDiscount: number;
+  appliedPromoCode?: string | null;
   onApplyPromo: (code: string) => boolean;
 }
 
@@ -32,6 +33,7 @@ export const CartPage: React.FC<CartPageProps> = ({
   onNavigate,
   onSelectProduct,
   appliedDiscount,
+  appliedPromoCode,
   onApplyPromo,
 }) => {
   const [promoInput, setPromoInput] = useState('');
@@ -60,11 +62,16 @@ export const CartPage: React.FC<CartPageProps> = ({
     e.preventDefault();
     if (!promoInput.trim()) return;
 
-    const success = onApplyPromo(promoInput.trim().toUpperCase());
+    const code = promoInput.trim().toUpperCase();
+    const success = onApplyPromo(code);
     if (success) {
-      setPromoMessage({ text: `Promo code "${promoInput.toUpperCase()}" applied successfully!`, isError: false });
+      if (code === '8HJ1CLD8CP') {
+        setPromoMessage({ text: 'VIP Voucher "8HJ1CLD8CP" applied: 25% OFF your order!', isError: false });
+      } else {
+        setPromoMessage({ text: `Promo code "${code}" applied successfully!`, isError: false });
+      }
     } else {
-      setPromoMessage({ text: 'Invalid promo code. Try "GOOGLE10" for 10% off.', isError: true });
+      setPromoMessage({ text: 'Invalid promo code. Try "8HJ1CLD8CP" (25% off) or "GOOGLE10" (10% off).', isError: true });
     }
   };
 
@@ -110,7 +117,7 @@ export const CartPage: React.FC<CartPageProps> = ({
                 }}
                 className="flex items-center gap-3 p-2.5 rounded-xl border border-gray-100 bg-white hover:border-blue-200 cursor-pointer transition-all"
               >
-                <img src={p.images[0]} alt={p.name} className="w-12 h-12 object-cover rounded-lg" />
+                <img src={p.images[0]} alt={p.name} referrerPolicy="no-referrer" className="w-12 h-12 object-cover rounded-lg" />
                 <div className="min-w-0">
                   <div className="text-xs font-semibold text-gray-900 truncate">{p.name}</div>
                   <div className="text-xs font-bold text-[#1A73E8]">${p.price.toFixed(2)}</div>
@@ -187,6 +194,7 @@ export const CartPage: React.FC<CartPageProps> = ({
                   <img
                     src={item.product.images[0]}
                     alt={item.product.name}
+                    referrerPolicy="no-referrer"
                     className="w-full h-full object-cover"
                   />
                 </div>
@@ -292,7 +300,7 @@ export const CartPage: React.FC<CartPageProps> = ({
                     type="text"
                     value={promoInput}
                     onChange={(e) => setPromoInput(e.target.value)}
-                    placeholder='Promo code (e.g. "GOOGLE10")'
+                    placeholder='Promo code (e.g. "8HJ1CLD8CP")'
                     className="w-full pl-9 pr-3 py-2 rounded-xl bg-gray-50 border border-gray-200 text-xs text-gray-900 placeholder-gray-400 uppercase font-semibold focus:outline-none focus:ring-2 focus:ring-blue-500"
                   />
                 </div>
@@ -303,6 +311,23 @@ export const CartPage: React.FC<CartPageProps> = ({
                   Apply
                 </button>
               </div>
+
+              {!appliedDiscount && (
+                <div className="flex items-center gap-1.5 text-[11px] text-gray-500 pt-0.5">
+                  <span>Available voucher:</span>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setPromoInput('8HJ1CLD8CP');
+                      onApplyPromo('8HJ1CLD8CP');
+                      setPromoMessage({ text: 'VIP Voucher "8HJ1CLD8CP" applied: 25% OFF your order!', isError: false });
+                    }}
+                    className="font-bold text-[#1A73E8] hover:underline cursor-pointer bg-blue-50 px-1.5 py-0.5 rounded-sm"
+                  >
+                    8HJ1CLD8CP (25% off)
+                  </button>
+                </div>
+              )}
 
               {promoMessage && (
                 <p
@@ -325,7 +350,7 @@ export const CartPage: React.FC<CartPageProps> = ({
 
               {discountAmount > 0 && (
                 <div className="flex justify-between text-emerald-700 font-medium">
-                  <span>Google Promotion ({appliedDiscount}%)</span>
+                  <span>Google Promotion ({appliedPromoCode ? `${appliedPromoCode} • ` : ''}{appliedDiscount}%)</span>
                   <span>-${discountAmount.toFixed(2)}</span>
                 </div>
               )}

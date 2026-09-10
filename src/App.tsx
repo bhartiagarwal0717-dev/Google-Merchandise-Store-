@@ -56,6 +56,7 @@ export default function App() {
     },
   ]);
   const [appliedDiscount, setAppliedDiscount] = useState<number>(0);
+  const [appliedPromoCode, setAppliedPromoCode] = useState<string | null>(null);
 
   // Delivery Address State
   const [deliveryAddress, setDeliveryAddress] = useState<DeliveryAddress>({
@@ -164,12 +165,20 @@ export default function App() {
 
   // Apply Promo code
   const handleApplyPromo = (code: string): boolean => {
-    if (code === 'GOOGLE10') {
-      setAppliedDiscount(10);
+    const cleanCode = code.trim().toUpperCase();
+    if (cleanCode === '8HJ1CLD8CP') {
+      setAppliedDiscount(25);
+      setAppliedPromoCode('8HJ1CLD8CP');
       return true;
     }
-    if (code === 'FREESHIP') {
+    if (cleanCode === 'GOOGLE10') {
+      setAppliedDiscount(10);
+      setAppliedPromoCode('GOOGLE10');
+      return true;
+    }
+    if (cleanCode === 'FREESHIP') {
       setAppliedDiscount(5);
+      setAppliedPromoCode('FREESHIP');
       return true;
     }
     return false;
@@ -254,6 +263,7 @@ export default function App() {
             onNavigate={navigateTo}
             onSelectProduct={handleSelectProduct}
             appliedDiscount={appliedDiscount}
+            appliedPromoCode={appliedPromoCode}
             onApplyPromo={handleApplyPromo}
           />
         )}
