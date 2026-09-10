@@ -1,5 +1,23 @@
 import { AnalyticsEvent, Product, CartItem, Order } from '../types';
 
+declare global {
+  interface Window {
+    dataLayer?: any[];
+    gtag?: (...args: any[]) => void;
+  }
+}
+
+export const GA_MEASUREMENT_ID = 'G-8HJ1CLD8CP';
+
+function sendGAEvent(eventName: string, params: Record<string, unknown> = {}) {
+  if (typeof window !== 'undefined' && typeof window.gtag === 'function') {
+    window.gtag('event', eventName, {
+      ...params,
+      send_to: GA_MEASUREMENT_ID,
+    });
+  }
+}
+
 type AnalyticsListener = (events: AnalyticsEvent[]) => void;
 
 class AnalyticsManager {
@@ -40,6 +58,20 @@ class AnalyticsManager {
   }
 
   /**
+   * Track Page View in GA4
+   */
+  public trackPageView(pageTitle: string, pagePath: string) {
+    if (typeof window !== 'undefined' && typeof window.gtag === 'function') {
+      window.gtag('event', 'page_view', {
+        page_title: pageTitle,
+        page_path: pagePath,
+        page_location: window.location.origin + pagePath,
+        send_to: GA_MEASUREMENT_ID,
+      });
+    }
+  }
+
+  /**
    * Analytics Placeholder 1: Product View
    * Fired whenever a user opens a product detail page or expands preview
    */
@@ -50,6 +82,18 @@ class AnalyticsManager {
       category: product.category,
       price: product.price,
       source,
+    });
+    sendGAEvent('view_item', {
+      currency: 'USD',
+      value: product.price,
+      items: [
+        {
+          item_id: product.id,
+          item_name: product.name,
+          item_category: product.category,
+          price: product.price,
+        },
+      ],
     });
   }
 
@@ -62,6 +106,9 @@ class AnalyticsManager {
       query,
       resultCount,
       filterCategory: filterCategory || 'all',
+    });
+    sendGAEvent('search', {
+      search_term: query,
     });
   }
 
@@ -79,6 +126,20 @@ class AnalyticsManager {
       quantity: item.quantity,
       value: item.product.price * item.quantity,
     });
+    sendGAEvent('add_to_cart', {
+      currency: 'USD',
+      value: item.product.price * item.quantity,
+      items: [
+        {
+          item_id: item.product.id,
+          item_name: item.product.name,
+          item_category: item.product.category,
+          item_variant: `${item.color} / ${item.size}`,
+          price: item.product.price,
+          quantity: item.quantity,
+        },
+      ],
+    });
   }
 
   /**
@@ -95,6 +156,18 @@ class AnalyticsManager {
         qty: i.quantity,
       })),
     });
+    sendGAEvent('begin_checkout', {
+      currency: 'USD',
+      value: totalAmount,
+      items: items.map((i) => ({
+        item_id: i.product.id,
+        item_name: i.product.name,
+        item_category: i.product.category,
+        item_variant: `${i.selectedColor.name} / ${i.selectedSize}`,
+        price: i.product.price,
+        quantity: i.quantity,
+      })),
+    });
   }
 
   /**
@@ -105,6 +178,11 @@ class AnalyticsManager {
     this.logEvent('Payment Started', {
       paymentMethod: method,
       totalAmount,
+    });
+    sendGAEvent('add_payment_info', {
+      currency: 'USD',
+      value: totalAmount,
+      payment_type: method,
     });
   }
 
@@ -120,6 +198,21 @@ class AnalyticsManager {
       shipping: order.shippingCost,
       itemCount: order.items.reduce((s, i) => sumWithQuantity(s, i), 0),
       paymentMethod: order.paymentMethod,
+    });
+    sendGAEvent('purchase', {
+      transaction_id: order.orderNumber,
+      value: order.total,
+      currency: 'USD',
+      tax: order.estimatedTax,
+      shipping: order.shippingCost,
+      items: order.items.map((i) => ({
+        item_id: i.product.id,
+        item_name: i.product.name,
+        item_category: i.product.category,
+        item_variant: `${i.selectedColor.name} / ${i.selectedSize}`,
+        price: i.product.price,
+        quantity: i.quantity,
+      })),
     });
   }
 }

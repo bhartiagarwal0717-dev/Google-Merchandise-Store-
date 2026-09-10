@@ -87,6 +87,21 @@ export default function App() {
     }, 3500);
   };
 
+  // Automatically track page views in Google Analytics 4 (G-8HJ1CLD8CP)
+  useEffect(() => {
+    const pagePath =
+      currentPage === 'product-detail' && selectedProduct
+        ? `/product/${selectedProduct.id}`
+        : `/${currentPage === 'home' ? '' : currentPage}`;
+
+    const pageTitle =
+      currentPage === 'product-detail' && selectedProduct
+        ? `${selectedProduct.name} - Google Merchandise Store`
+        : `${currentPage.charAt(0).toUpperCase() + currentPage.slice(1).replace(/-/g, ' ')} - Google Merchandise Store`;
+
+    analytics.trackPageView(pageTitle, pagePath);
+  }, [currentPage, selectedProduct]);
+
   // Add to Cart handler
   const handleAddToCart = (
     product: Product,
